@@ -577,8 +577,6 @@
     </style>
 </head>
 <body>
-    <!-- No video background anymore -->
-
     <div class="container">
         <!-- Thank You Message (hidden by default) -->
         <div id="thankYouCard" class="thank-you-card" style="display: none;">
@@ -701,26 +699,36 @@
             return null;
         }
 
+        // Function to get query parameters from URL
+        function getQueryParams() {
+            const params = {};
+            const urlSearchParams = new URLSearchParams(window.location.search);
+            for (const [key, value] of urlSearchParams) {
+                params[key] = value;
+            }
+            return params;
+        }
+
         // Check if form was already submitted
-      function checkSubmissionStatus() {
-    const queryParams = getQueryParams();
-    const token = queryParams.token || '';
-    
-    if (!token) {
-        console.error('No token provided in URL');
-        return false;
-    }
-    
-    const cookieName = `rsvp_submitted_${token}`;
-    
-    if (getCookie(cookieName)) {
-        // Show thank you message and hide main form
-        mainCard.style.display = 'none';
-        thankYouCard.style.display = 'block';
-        return true;
-    }
-    return false;
-}
+        function checkSubmissionStatus() {
+            const queryParams = getQueryParams();
+            const token = queryParams.token || '';
+            
+            if (!token) {
+                console.error('No token provided in URL');
+                return false;
+            }
+            
+            const cookieName = `rsvp_submitted_${token}`;
+            
+            if (getCookie(cookieName)) {
+                // Show thank you message and hide main form
+                mainCard.style.display = 'none';
+                thankYouCard.style.display = 'block';
+                return true;
+            }
+            return false;
+        }
 
         async function checkTokenStatus(token) {
             try {
@@ -739,36 +747,39 @@
 
         // Function to initialize the form based on URL parameters
         function initForm() {
-    const queryParams = getQueryParams();
+            const queryParams = getQueryParams();
 
-    // Decode the URL-encoded values
-    const inviteeName = queryParams.name ? decodeURIComponent(queryParams.name) : '';
-    const initialMaxGuests = parseInt(queryParams.m || '1');
-    const inviteeTitle = queryParams.title ? decodeURIComponent(queryParams.title) : '';
+            // Decode the URL-encoded values
+            const inviteeName = queryParams.name ? decodeURIComponent(queryParams.name) : '';
+            const initialMaxGuests = parseInt(queryParams.m || '1');
+            const inviteeTitleParam = queryParams.title ? decodeURIComponent(queryParams.title) : '';
 
-    console.log('URL params:', queryParams); // Debug log
-    console.log('Decoded name:', inviteeName); // Debug log
-    console.log('Decoded title:', inviteeTitle); // Debug log
+            console.log('URL params:', queryParams); // Debug log
+            console.log('Decoded name:', inviteeName); // Debug log
+            console.log('Decoded title:', inviteeTitleParam); // Debug log
 
-    // Pre-fill invitee name and title
-    if (inviteeName.trim()) {
-        inviteeNameInput.value = inviteeName.trim();
-    }
-    if (inviteeTitle.trim()) {
-        inviteeTitle.trim() === 'السيد' ? inviteeTitleSelect.value = 'السيد' : 
-        inviteeTitle.trim() === 'السيدة' ? inviteeTitleSelect.value = 'السيدة' : null;
-    }
+            // Pre-fill invitee name and title
+            if (inviteeName.trim()) {
+                inviteeNameInput.value = inviteeName.trim();
+            }
+            if (inviteeTitleParam.trim()) {
+                if (inviteeTitleParam.trim() === 'السيد') {
+                    inviteeTitleSelect.value = 'السيد';
+                } else if (inviteeTitleParam.trim() === 'السيدة') {
+                    inviteeTitleSelect.value = 'السيدة';
+                }
+            }
 
-    // Set the dynamic maximum total guests allowed
-    maxTotalGuestsAllowed = Math.max(1, initialMaxGuests);
-    numGuestsInput.max = maxTotalGuestsAllowed;
+            // Set the dynamic maximum total guests allowed
+            maxTotalGuestsAllowed = Math.max(1, initialMaxGuests);
+            numGuestsInput.max = maxTotalGuestsAllowed;
 
-    // Set the initial number of guests to the maximum allowed
-    numGuestsInput.value = maxTotalGuestsAllowed;
+            // Set the initial number of guests to the maximum allowed
+            numGuestsInput.value = maxTotalGuestsAllowed;
 
-    toggleAttendingDetails();
-    renderGuestFields();
-}
+            toggleAttendingDetails();
+            renderGuestFields();
+        }
 
         // Function to dynamically render guest input fields
         function renderGuestFields() {
@@ -884,24 +895,30 @@
             try {
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    credentials: 'omit',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'text/plain', // Changed to avoid preflight
                     },
                     body: JSON.stringify(data)
                 });
 
-                // Set cookie to prevent re-submission
-               const queryParams = getQueryParams();
-const token = queryParams.token || '';
-const cookieName = `rsvp_submitted_${token}`;
-setCookie(cookieName, 'true', 30);
+                const result = await response.json();
 
-                // Hide main form and show thank you message
-                mainCard.style.display = 'none';
-                thankYouCard.style.display = 'block';
+                if (result.success) {
+                    // Set cookie to prevent re-submission
+                    const queryParams = getQueryParams();
+                    const token = queryParams.token || '';
+                    const cookieName = `rsvp_submitted_${token}`;
+                    setCookie(cookieName, 'true', 30);
+
+                    // Hide main form and show thank you message
+                    mainCard.style.display = 'none';
+                    thankYouCard.style.display = 'block';
+                } else {
+                    // Handle server errors
+                    responseMessage.innerHTML = result.message || 'حدث خطأ أثناء الإرسال';
+                    responseMessage.className = 'error';
+                    responseMessage.style.display = 'block';
+                }
 
             } catch (error) {
                 console.error('Error submitting form:', error);
@@ -914,8 +931,6 @@ setCookie(cookieName, 'true', 30);
                 submitButton.innerHTML = 'تأكيد الحضور';
             }
         });
-
-        // No more video-related code needed
     </script>
 </body>
 </html>
