@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دعوة حفل زفاف - [اسم العروس] و [اسم العريس]</title>
+    <!-- Updated Title with Wedding Names -->
+    <title>دعوة حفل زفاف فهمي و نور</title>
     <!-- Google Fonts for Arabic font 'Cairo' -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Basic Reset & Body Styling */
+        /* General Body Styling */
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f8f8; /* Light background for a clean look */
+            /* Theme color as background, but video will cover it */
+            background-color: #F7EEDF;
             color: #333; /* Dark gray for text */
             line-height: 1.6;
             direction: rtl; /* Right-to-left for Arabic text */
@@ -21,16 +23,37 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh; /* Ensure page takes at least full viewport height */
+            position: relative; /* Needed for video background positioning */
+            overflow: hidden; /* Hide overflow from video */
         }
 
+        /* Video Background Styling */
+        #background-video {
+            position: fixed; /* Fix video to viewport */
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1; /* Place behind other content */
+            object-fit: cover; /* Cover the entire container */
+            /* Optional: Add blur or darken effect for readability */
+            filter: brightness(70%) blur(2px);
+            transition: filter 0.5s ease; /* Smooth transition for filter changes */
+        }
+
+        /* Container Styling */
         .container {
-            background-color: #fff; /* White background for the form container */
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white for readability over video */
             padding: 30px;
             border-radius: 10px; /* Slightly rounded corners */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
             max-width: 600px; /* Maximum width of the form */
             width: 90%; /* Responsive width */
             margin: 20px auto; /* Center the container with some vertical margin */
+            z-index: 1; /* Ensure it's above the video */
+            position: relative; /* For z-index to work correctly */
         }
 
         /* Header & Imagery Styling */
@@ -83,6 +106,25 @@
             font-family: 'Cairo', sans-serif;
             box-sizing: border-box; /* Include padding in element's total width/height */
             text-align: right; /* Input text aligned to the right */
+            background-color: #fefefe; /* Slightly off-white for inputs */
+        }
+
+        /* Side-by-side fields */
+        .field-row {
+            display: flex;
+            flex-direction: column; /* Default to column for small screens */
+            gap: 15px;
+        }
+
+        .field-row .form-group {
+            flex: 1; /* Allow flex items to grow */
+            margin-bottom: 0; /* Remove default margin as gap handles spacing */
+        }
+
+        @media (min-width: 600px) {
+            .field-row {
+                flex-direction: row; /* Row for larger screens */
+            }
         }
 
         input[type="radio"] {
@@ -170,30 +212,39 @@
     </style>
 </head>
 <body>
+    <!-- Video Background -->
+    <video autoplay muted loop id="background-video">
+        <!-- IMPORTANT: Ensure 'video.mp4' is in the same directory as index.html -->
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
     <div class="container">
         <div class="header">
-            <!-- IMPORTANT: Replace 'YOUR_WEDDING_PICTURE_URL.jpg' with your actual image URL -->
-            <img src="https://placehold.co/600x200/B8860B/ffffff?text=صورة+الزفاف" alt="صورة الزفاف">
-            <!-- IMPORTANT: Replace [اسم العروس] and [اسم العريس] with actual names -->
+            <!-- IMPORTANT: Ensure 'fahminoor.png' is in the same directory as index.html -->
+            <img src="fahminoor.png" alt="صورة الزفاف">
+            <!-- Updated Title with Wedding Names -->
             <h1>دعوة حفل زفاف فهمي و نور</h1>
             <p>نتشرف بدعوتكم لمشاركتنا فرحة العمر في حفل زفافنا. يرجى تأكيد حضوركم عن طريق تعبئة النموذج أدناه.</p>
         </div>
 
         <form id="rsvpForm">
-            <!-- Main Invitee Name (pre-filled from URL, read-only) -->
-            <div class="form-group">
-                <label for="inviteeName">اسمك الكريم:</label>
-                <input type="text" id="inviteeName" name="inviteeName" required readonly>
-            </div>
+            <!-- Main Invitee Name and Title (side-by-side) -->
+            <div class="field-row">
+                <div class="form-group">
+                    <label for="inviteeName">اسمك الكريم:</label>
+                    <input type="text" id="inviteeName" name="inviteeName" required readonly>
+                </div>
 
-            <!-- Main Invitee Title (Mr/Mrs selection) -->
-            <div class="form-group">
-                <label for="inviteeTitle">لقبك:</label>
-                <select id="inviteeTitle" name="inviteeTitle" required>
-                    <option value="">اختر لقبك</option>
-                    <option value="السيد">السيد</option>
-                    <option value="السيدة">السيدة</option>
-                </select>
+                <div class="form-group">
+                    <label for="inviteeTitle">لقبك:</label>
+                    <select id="inviteeTitle" name="inviteeTitle" required>
+                        <!-- 'disabled selected hidden' makes this option unselectable and serves as a placeholder -->
+                        <option value="" disabled selected hidden>اختر لقبك</option>
+                        <option value="السيد">السيد</option>
+                        <option value="السيدة">السيدة</option>
+                    </select>
+                </div>
             </div>
 
             <!-- RSVP Status (Yes/No) -->
@@ -214,16 +265,20 @@
             <!-- Attending Details Section (shown if RSVP is 'Yes') -->
             <div id="attendingDetails">
                 <div class="form-group">
-                    <label for="numGuests">كم عدد الضيوف الإضافيين الذين سيحضرون معك؟ (باستثنائك)</label>
-                    <!-- Min is 0, max is dynamic based on URL parameter -->
-                    <input type="number" id="numGuests" name="numGuests" min="0" value="0" required>
-                    <small style="color: #888; font-size: 0.9em;">
-                        الحد الأقصى للضيوف الإضافيين هو <span id="maxGuestsAllowedSpan">0</span>.
-                    </small>
+                    <label for="numGuests">كم عدد الضيوف الكليين الذين سيحضرون معكم؟ (بما في ذلك أنت)</label>
+                    <!-- Min is 1 (main invitee), max is dynamic based on URL parameter -->
+                    <input type="number" id="numGuests" name="numGuests" min="1" value="1" required>
+                    <!-- Removed description of max guests -->
                 </div>
 
                 <div id="guestsContainer">
                     <!-- Dynamic guest fields will be inserted here by JavaScript -->
+                </div>
+
+                <!-- Song Request -->
+                <div class="form-group">
+                    <label for="songRequest">هل توجد أغنية مفضلة تود سماعها في حفل الزفاف؟</label>
+                    <input type="text" id="songRequest" name="songRequest">
                 </div>
 
                 <!-- Other Notes -->
@@ -241,7 +296,7 @@
     </div>
 
     <script>
-        // IMPORTANT: Replace 'YOUR_APPS_SCRIPT_WEB_APP_URL' with the actual URL you got from deploying your Apps Script.
+        // IMPORTANT: Your Apps Script Web App URL
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwslZ-1fazX8eDjsF6TS23heh-REA06Ic8AvdhynkB_HEX2CG37Dv6icznOCRBetNN0/exec';
 
         // Get references to HTML elements
@@ -255,12 +310,10 @@
         const guestsContainer = document.getElementById('guestsContainer');
         const submitButton = document.getElementById('submitButton');
         const responseMessage = document.getElementById('responseMessage');
-        const maxGuestsAllowedSpan = document.getElementById('maxGuestsAllowedSpan');
 
-        let maxGuestsAllowed = 0; // This will store the maximum guests allowed for the current invitee, parsed from URL.
+        let maxTotalGuestsAllowed = 1; // This will store the maximum total guests allowed (including invitee), parsed from URL.
 
         // Function to parse URL query parameters
-        // This allows us to extract 'name', 'max', and 'title' from the URL.
         function getQueryParams() {
             const params = {};
             window.location.search.substring(1).split('&').forEach(param => {
@@ -271,31 +324,31 @@
         }
 
         // Function to initialize the form based on URL parameters
-        // Called when the page loads to pre-fill invitee data and set guest limits.
         function initForm() {
             const queryParams = getQueryParams();
 
-            // Pre-fill invitee name from URL parameter 'name'
             const inviteeName = queryParams.name || '';
+            const initialMaxGuests = parseInt(queryParams.max || '1'); // Default to 1 if max is not provided
+            const inviteeTitle = queryParams.title || '';
+
+            // Pre-fill invitee name and title
             if (inviteeName) {
                 inviteeNameInput.value = inviteeName;
             }
-
-            // Pre-fill invitee title from URL parameter 'title'
-            const inviteeTitle = queryParams.title || '';
             if (inviteeTitle) {
                 inviteeTitleSelect.value = inviteeTitle;
             }
 
-            // Set the dynamic maximum number of additional guests from URL parameter 'max'
-            const initialMaxGuests = parseInt(queryParams.max || '0');
-            maxGuestsAllowed = initialMaxGuests;
-            numGuestsInput.max = maxGuestsAllowed; // Set the HTML input's max attribute
-            maxGuestsAllowedSpan.textContent = maxGuestsAllowed; // Display the max limit to the user
+            // Set the dynamic maximum total guests allowed
+            maxTotalGuestsAllowed = Math.max(1, initialMaxGuests); // Ensure min is 1
+            numGuestsInput.max = maxTotalGuestsAllowed;
 
-            // Ensure the initial state correctly reflects RSVP choice (if already selected, though not typical on first load)
+            // Automatically set the initial number of guests to the maximum allowed
+            numGuestsInput.value = maxTotalGuestsAllowed;
+
+            // Ensure the initial state correctly reflects RSVP choice
             toggleAttendingDetails();
-            renderGuestFields(); // Render initial guest fields based on default numGuestsInput value (0)
+            renderGuestFields(); // Render initial guest fields based on the pre-populated numGuestsInput value
         }
 
         // Function to dynamically render guest input fields based on `numGuestsInput` value
@@ -303,9 +356,11 @@
             const num = parseInt(numGuestsInput.value);
             guestsContainer.innerHTML = ''; // Clear any previously rendered guest fields
 
-            // Client-side validation: ensure the number of guests is within allowed range
-            if (num < 0 || num > maxGuestsAllowed) {
-                responseMessage.textContent = `الرجاء إدخال عدد ضيوف إضافيين بين 0 و ${maxGuestsAllowed}.`;
+            // Client-side validation: ensure the total number of guests is within allowed range
+            // 'num' here refers to the total number of people including the main invitee.
+            // We need to render fields for num - 1 additional guests.
+            if (num < 1 || num > maxTotalGuestsAllowed) {
+                responseMessage.textContent = `الرجاء إدخال العدد الكلي للحضور بين 1 و ${maxTotalGuestsAllowed}.`;
                 responseMessage.className = 'error';
                 responseMessage.style.display = 'block';
                 submitButton.disabled = true; // Disable submit if validation fails
@@ -315,23 +370,27 @@
                 submitButton.disabled = false; // Enable submit button
             }
 
-            // Loop to create and append input fields for each guest
-            for (let i = 1; i <= num; i++) {
+            const numberOfAdditionalGuests = num - 1; // Calculate how many additional guest fields to show
+
+            // Loop to create and append input fields for each *additional* guest
+            for (let i = 1; i <= numberOfAdditionalGuests; i++) {
                 const guestSection = document.createElement('div');
                 guestSection.className = 'guest-section'; // Apply styling for guest sections
                 guestSection.innerHTML = `
                     <h3>تفاصيل الضيف ${i}</h3>
-                    <div class="form-group">
-                        <label for="guest${i}Name">الاسم الكامل للضيف ${i}:</label>
-                        <input type="text" id="guest${i}Name" name="guest${i}Name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="guest${i}Title">لقب الضيف ${i}:</label>
-                        <select id="guest${i}Title" name="guest${i}Title" required>
-                            <option value="">اختر لقبك</option>
-                            <option value="السيد">السيد</option>
-                            <option value="السيدة">السيدة</option>
-                        </select>
+                    <div class="field-row">
+                        <div class="form-group">
+                            <label for="guest${i}Name">الاسم الكامل للضيف ${i}:</label>
+                            <input type="text" id="guest${i}Name" name="guest${i}Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guest${i}Title">لقب الضيف ${i}:</label>
+                            <select id="guest${i}Title" name="guest${i}Title" required>
+                                <option value="" disabled selected hidden>اختر لقبك</option>
+                                <option value="السيد">السيد</option>
+                                <option value="السيدة">السيدة</option>
+                            </select>
+                        </div>
                     </div>
                 `;
                 guestsContainer.appendChild(guestSection);
@@ -342,20 +401,19 @@
         numGuestsInput.addEventListener('input', renderGuestFields);
 
         // Function to toggle the visibility of the "attending details" section
-        // This hides guest fields and other questions if the invitee is not attending.
         function toggleAttendingDetails() {
             if (rsvpYes.checked) {
                 attendingDetails.style.display = 'block';
                 numGuestsInput.setAttribute('required', 'true'); // Make guest count required if attending
-                // Reset numGuests to 0 and re-render if switching from "No" to "Yes"
-                if (numGuestsInput.value === "") { // Check if value is empty/null, indicating a fresh toggle
-                    numGuestsInput.value = 0;
+                // When switching from 'No' to 'Yes', reset numGuests to the max allowed by invite
+                if (numGuestsInput.value === "0" || parseInt(numGuestsInput.value) < 1) { // Check if value is 0 or less
+                     numGuestsInput.value = maxTotalGuestsAllowed;
                 }
                 renderGuestFields(); // Ensure guest fields are rendered based on current numGuests value
             } else {
                 attendingDetails.style.display = 'none';
                 numGuestsInput.removeAttribute('required'); // No longer required if not attending
-                numGuestsInput.value = 0; // Reset guest count to 0 if not attending
+                numGuestsInput.value = 1; // Reset guest count to 1 (main invitee, won't show if section is hidden)
                 guestsContainer.innerHTML = ''; // Clear any visible guest fields
             }
         }
@@ -364,7 +422,7 @@
         rsvpYes.addEventListener('change', toggleAttendingDetails);
         rsvpNo.addEventListener('change', toggleAttendingDetails);
 
-        // Initialize form state on page load (e.g., hide attending details initially)
+        // Initialize form state on page load
         window.addEventListener('load', initForm);
 
         // Form submission handler
@@ -381,33 +439,35 @@
             const formData = new FormData(rsvpForm);
             const data = {
                 inviteeName: formData.get('inviteeName'),
-                inviteeTitle: formData.get('inviteeTitle'), // Get invitee title
+                inviteeTitle: formData.get('inviteeTitle'),
                 rsvpStatus: formData.get('rsvpStatus'),
+                songRequest: formData.get('songRequest'),
                 otherNotes: formData.get('otherNotes'),
-                guests: [] // Array to hold guest objects
+                guests: [] // Array to hold guest objects (additional guests only)
             };
+
+            let totalAttending = 0; // Initialize total attending count
 
             // Process guest details only if the invitee is attending
             if (data.rsvpStatus === 'نعم، سأحضر') {
-                const numGuests = parseInt(formData.get('numGuests'));
-                data.totalAttending = 1 + numGuests; // Total attending = main invitee + additional guests
+                totalAttending = parseInt(formData.get('numGuests')); // Total attending is directly from numGuests input
+                const numberOfAdditionalGuests = totalAttending - 1; // Number of additional guests
 
-                // Collect details for each active guest field
-                for (let i = 1; i <= numGuests; i++) {
+                // Collect details for each active additional guest field
+                for (let i = 1; i <= numberOfAdditionalGuests; i++) {
                     const guestName = formData.get(`guest${i}Name`);
-                    const guestTitle = formData.get(`guest${i}Title`); // Get guest title
+                    const guestTitle = formData.get(`guest${i}Title`);
 
                     // Only add guest if their name is provided (basic validation)
                     if (guestName) {
                         data.guests.push({
                             name: guestName,
-                            title: guestTitle // Store guest title
+                            title: guestTitle
                         });
                     }
                 }
-            } else {
-                data.totalAttending = 0; // If not attending, total is 0
             }
+            data.totalAttending = totalAttending; // Set total attending in the data object
 
             try {
                 // Send data to Google Apps Script Web App
@@ -422,12 +482,14 @@
                     body: JSON.stringify(data) // Send collected data as JSON
                 });
 
-                // Due to 'no-cors', we can't directly read the response status or body from fetch.
-                // However, the Apps Script will still receive and process the data.
-                // We assume success here. For robust error handling, a CORS-enabled endpoint or alternative
-                // client-side validation would be needed.
-                responseMessage.textContent = 'تم إرسال تأكيد حضورك بنجاح! شكراً لك.';
-                responseMessage.className = 'success';
+                // Conditional confirmation messages based on RSVP status
+                if (data.rsvpStatus === 'نعم، سأحضر') {
+                    responseMessage.textContent = 'يسعدنا جداً حضوركم! تم تأكيد حضوركم بنجاح. نتشوق لرؤيتكم في حفل زفافنا.';
+                    responseMessage.className = 'success';
+                } else {
+                    responseMessage.textContent = 'نأسف لعدم تمكنكم من الحضور. شكراً لتأكيدكم، ونتمنى لكم كل خير.';
+                    responseMessage.className = 'error'; /* Using error class for 'no' just for contrasting style */
+                }
                 responseMessage.style.display = 'block';
 
                 rsvpForm.reset(); // Clear the form fields
