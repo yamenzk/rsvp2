@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة حفل زفاف - [اسم العروس] و [اسم العريس]</title>
+    <!-- Google Fonts for Arabic font 'Cairo' -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset & Body Styling */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8; /* Light background for a clean look */
+            color: #333; /* Dark gray for text */
+            line-height: 1.6;
+            direction: rtl; /* Right-to-left for Arabic text */
+            text-align: right; /* Align text to the right */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure page takes at least full viewport height */
+        }
+
+        .container {
+            background-color: #fff; /* White background for the form container */
+            padding: 30px;
+            border-radius: 10px; /* Slightly rounded corners */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+            max-width: 600px; /* Maximum width of the form */
+            width: 90%; /* Responsive width */
+            margin: 20px auto; /* Center the container with some vertical margin */
+        }
+
+        /* Header & Imagery Styling */
+        .header {
+            text-align: center; /* Center header content */
+            margin-bottom: 25px;
+        }
+
+        .header img {
+            max-width: 100%; /* Responsive image */
+            height: auto;
+            border-radius: 8px; /* Rounded image corners */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for image */
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #8B4513; /* Earthy brown tone for the main title */
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        /* Form Element Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block; /* Each label on its own line */
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: calc(100% - 20px); /* Full width minus padding for box-sizing */
+            padding: 12px;
+            border: 1px solid #ddd; /* Light gray border */
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box; /* Include padding in element's total width/height */
+            text-align: right; /* Input text aligned to the right */
+        }
+
+        input[type="radio"] {
+            margin-left: 10px; /* Space out radio buttons from their labels */
+            margin-right: 0; /* Override default left margin */
+        }
+
+        .radio-group label {
+            display: inline-block; /* Labels next to radio buttons */
+            margin-left: 20px;
+            font-weight: normal;
+        }
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end; /* Align radio options to the right */
+            gap: 15px; /* Space between radio options */
+        }
+        .radio-group div {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between radio button and its label */
+        }
+
+        button {
+            background-color: #8B4513; /* Earthy brown button */
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+            width: 100%; /* Full width button */
+        }
+
+        button:hover {
+            background-color: #6B330F; /* Darker brown on hover */
+        }
+
+        button:disabled {
+            background-color: #ccc; /* Gray out disabled button */
+            cursor: not-allowed;
+        }
+
+        /* Message Display Styling */
+        #responseMessage {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            display: none; /* Hidden by default, shown by JS */
+        }
+
+        .success {
+            background-color: #d4edda; /* Light green background */
+            color: #155724; /* Dark green text */
+            border: 1px solid #badbcc; /* Green border */
+        }
+
+        .error {
+            background-color: #f8d7da; /* Light red background */
+            color: #721c24; /* Dark red text */
+            border: 1px solid #f5c6cb; /* Red border */
+        }
+
+        /* Dynamic Guest Section Styling */
+        .guest-section {
+            background-color: #f2f2f2; /* Light gray background for guest sections */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px dashed #ccc; /* Dashed border for visual separation */
+        }
+
+        .guest-section h3 {
+            color: #8B4513;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 1px solid #ddd; /* Separator line */
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- IMPORTANT: Replace 'YOUR_WEDDING_PICTURE_URL.jpg' with your actual image URL -->
+            <img src="https://placehold.co/600x200/B8860B/ffffff?text=صورة+الزفاف" alt="صورة الزفاف">
+            <!-- IMPORTANT: Replace [اسم العروس] and [اسم العريس] with actual names -->
+            <h1>دعوة حفل زفاف فهمي و نور</h1>
+            <p>نتشرف بدعوتكم لمشاركتنا فرحة العمر في حفل زفافنا. يرجى تأكيد حضوركم عن طريق تعبئة النموذج أدناه.</p>
+        </div>
+
+        <form id="rsvpForm">
+            <!-- Main Invitee Name (pre-filled from URL, read-only) -->
+            <div class="form-group">
+                <label for="inviteeName">اسمك الكريم:</label>
+                <input type="text" id="inviteeName" name="inviteeName" required readonly>
+            </div>
+
+            <!-- Main Invitee Title (Mr/Mrs selection) -->
+            <div class="form-group">
+                <label for="inviteeTitle">لقبك:</label>
+                <select id="inviteeTitle" name="inviteeTitle" required>
+                    <option value="">اختر لقبك</option>
+                    <option value="السيد">السيد</option>
+                    <option value="السيدة">السيدة</option>
+                </select>
+            </div>
+
+            <!-- RSVP Status (Yes/No) -->
+            <div class="form-group">
+                <label>هل ستحضرون حفل زفافنا؟</label>
+                <div class="radio-group">
+                    <div>
+                        <input type="radio" id="rsvpYes" name="rsvpStatus" value="نعم، سأحضر" required>
+                        <label for="rsvpYes">نعم، سأحضر</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="rsvpNo" name="rsvpStatus" value="لا، لن أحضر">
+                        <label for="rsvpNo">لا، لن أحضر</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attending Details Section (shown if RSVP is 'Yes') -->
+            <div id="attendingDetails">
+                <div class="form-group">
+                    <label for="numGuests">كم عدد الضيوف الإضافيين الذين سيحضرون معك؟ (باستثنائك)</label>
+                    <!-- Min is 0, max is dynamic based on URL parameter -->
+                    <input type="number" id="numGuests" name="numGuests" min="0" value="0" required>
+                    <small style="color: #888; font-size: 0.9em;">
+                        الحد الأقصى للضيوف الإضافيين هو <span id="maxGuestsAllowedSpan">0</span>.
+                    </small>
+                </div>
+
+                <div id="guestsContainer">
+                    <!-- Dynamic guest fields will be inserted here by JavaScript -->
+                </div>
+
+                <!-- Other Notes -->
+                <div class="form-group">
+                    <label for="otherNotes">ملاحظات أخرى:</label>
+                    <textarea id="otherNotes" name="otherNotes" rows="3"></textarea>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submitButton">إرسال تأكيد الحضور</button>
+            <!-- Response Message Area -->
+            <div id="responseMessage"></div>
+        </form>
+    </div>
+
+    <script>
+        // IMPORTANT: Replace 'YOUR_APPS_SCRIPT_WEB_APP_URL' with the actual URL you got from deploying your Apps Script.
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwslZ-1fazX8eDjsF6TS23heh-REA06Ic8AvdhynkB_HEX2CG37Dv6icznOCRBetNN0/exec';
+
+        // Get references to HTML elements
+        const rsvpForm = document.getElementById('rsvpForm');
+        const inviteeNameInput = document.getElementById('inviteeName');
+        const inviteeTitleSelect = document.getElementById('inviteeTitle');
+        const rsvpYes = document.getElementById('rsvpYes');
+        const rsvpNo = document.getElementById('rsvpNo');
+        const attendingDetails = document.getElementById('attendingDetails');
+        const numGuestsInput = document.getElementById('numGuests');
+        const guestsContainer = document.getElementById('guestsContainer');
+        const submitButton = document.getElementById('submitButton');
+        const responseMessage = document.getElementById('responseMessage');
+        const maxGuestsAllowedSpan = document.getElementById('maxGuestsAllowedSpan');
+
+        let maxGuestsAllowed = 0; // This will store the maximum guests allowed for the current invitee, parsed from URL.
+
+        // Function to parse URL query parameters
+        // This allows us to extract 'name', 'max', and 'title' from the URL.
+        function getQueryParams() {
+            const params = {};
+            window.location.search.substring(1).split('&').forEach(param => {
+                const [key, value] = param.split('=');
+                params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+            });
+            return params;
+        }
+
+        // Function to initialize the form based on URL parameters
+        // Called when the page loads to pre-fill invitee data and set guest limits.
+        function initForm() {
+            const queryParams = getQueryParams();
+
+            // Pre-fill invitee name from URL parameter 'name'
+            const inviteeName = queryParams.name || '';
+            if (inviteeName) {
+                inviteeNameInput.value = inviteeName;
+            }
+
+            // Pre-fill invitee title from URL parameter 'title'
+            const inviteeTitle = queryParams.title || '';
+            if (inviteeTitle) {
+                inviteeTitleSelect.value = inviteeTitle;
+            }
+
+            // Set the dynamic maximum number of additional guests from URL parameter 'max'
+            const initialMaxGuests = parseInt(queryParams.max || '0');
+            maxGuestsAllowed = initialMaxGuests;
+            numGuestsInput.max = maxGuestsAllowed; // Set the HTML input's max attribute
+            maxGuestsAllowedSpan.textContent = maxGuestsAllowed; // Display the max limit to the user
+
+            // Ensure the initial state correctly reflects RSVP choice (if already selected, though not typical on first load)
+            toggleAttendingDetails();
+            renderGuestFields(); // Render initial guest fields based on default numGuestsInput value (0)
+        }
+
+        // Function to dynamically render guest input fields based on `numGuestsInput` value
+        function renderGuestFields() {
+            const num = parseInt(numGuestsInput.value);
+            guestsContainer.innerHTML = ''; // Clear any previously rendered guest fields
+
+            // Client-side validation: ensure the number of guests is within allowed range
+            if (num < 0 || num > maxGuestsAllowed) {
+                responseMessage.textContent = `الرجاء إدخال عدد ضيوف إضافيين بين 0 و ${maxGuestsAllowed}.`;
+                responseMessage.className = 'error';
+                responseMessage.style.display = 'block';
+                submitButton.disabled = true; // Disable submit if validation fails
+                return;
+            } else {
+                responseMessage.style.display = 'none'; // Hide error message if valid
+                submitButton.disabled = false; // Enable submit button
+            }
+
+            // Loop to create and append input fields for each guest
+            for (let i = 1; i <= num; i++) {
+                const guestSection = document.createElement('div');
+                guestSection.className = 'guest-section'; // Apply styling for guest sections
+                guestSection.innerHTML = `
+                    <h3>تفاصيل الضيف ${i}</h3>
+                    <div class="form-group">
+                        <label for="guest${i}Name">الاسم الكامل للضيف ${i}:</label>
+                        <input type="text" id="guest${i}Name" name="guest${i}Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guest${i}Title">لقب الضيف ${i}:</label>
+                        <select id="guest${i}Title" name="guest${i}Title" required>
+                            <option value="">اختر لقبك</option>
+                            <option value="السيد">السيد</option>
+                            <option value="السيدة">السيدة</option>
+                        </select>
+                    </div>
+                `;
+                guestsContainer.appendChild(guestSection);
+            }
+        }
+
+        // Event listener: Call renderGuestFields whenever the number of guests input changes
+        numGuestsInput.addEventListener('input', renderGuestFields);
+
+        // Function to toggle the visibility of the "attending details" section
+        // This hides guest fields and other questions if the invitee is not attending.
+        function toggleAttendingDetails() {
+            if (rsvpYes.checked) {
+                attendingDetails.style.display = 'block';
+                numGuestsInput.setAttribute('required', 'true'); // Make guest count required if attending
+                // Reset numGuests to 0 and re-render if switching from "No" to "Yes"
+                if (numGuestsInput.value === "") { // Check if value is empty/null, indicating a fresh toggle
+                    numGuestsInput.value = 0;
+                }
+                renderGuestFields(); // Ensure guest fields are rendered based on current numGuests value
+            } else {
+                attendingDetails.style.display = 'none';
+                numGuestsInput.removeAttribute('required'); // No longer required if not attending
+                numGuestsInput.value = 0; // Reset guest count to 0 if not attending
+                guestsContainer.innerHTML = ''; // Clear any visible guest fields
+            }
+        }
+
+        // Event listeners for RSVP status radio buttons
+        rsvpYes.addEventListener('change', toggleAttendingDetails);
+        rsvpNo.addEventListener('change', toggleAttendingDetails);
+
+        // Initialize form state on page load (e.g., hide attending details initially)
+        window.addEventListener('load', initForm);
+
+        // Form submission handler
+        rsvpForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent the default browser form submission
+
+            // Disable button and show loading state
+            submitButton.disabled = true;
+            submitButton.textContent = 'جاري الإرسال...';
+            responseMessage.style.display = 'none'; // Hide previous messages
+            responseMessage.className = ''; // Clear previous message styling
+
+            // Collect form data
+            const formData = new FormData(rsvpForm);
+            const data = {
+                inviteeName: formData.get('inviteeName'),
+                inviteeTitle: formData.get('inviteeTitle'), // Get invitee title
+                rsvpStatus: formData.get('rsvpStatus'),
+                otherNotes: formData.get('otherNotes'),
+                guests: [] // Array to hold guest objects
+            };
+
+            // Process guest details only if the invitee is attending
+            if (data.rsvpStatus === 'نعم، سأحضر') {
+                const numGuests = parseInt(formData.get('numGuests'));
+                data.totalAttending = 1 + numGuests; // Total attending = main invitee + additional guests
+
+                // Collect details for each active guest field
+                for (let i = 1; i <= numGuests; i++) {
+                    const guestName = formData.get(`guest${i}Name`);
+                    const guestTitle = formData.get(`guest${i}Title`); // Get guest title
+
+                    // Only add guest if their name is provided (basic validation)
+                    if (guestName) {
+                        data.guests.push({
+                            name: guestName,
+                            title: guestTitle // Store guest title
+                        });
+                    }
+                }
+            } else {
+                data.totalAttending = 0; // If not attending, total is 0
+            }
+
+            try {
+                // Send data to Google Apps Script Web App
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Use 'no-cors' for Apps Script Web Apps to avoid CORS issues
+                    cache: 'no-cache',
+                    credentials: 'omit',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data) // Send collected data as JSON
+                });
+
+                // Due to 'no-cors', we can't directly read the response status or body from fetch.
+                // However, the Apps Script will still receive and process the data.
+                // We assume success here. For robust error handling, a CORS-enabled endpoint or alternative
+                // client-side validation would be needed.
+                responseMessage.textContent = 'تم إرسال تأكيد حضورك بنجاح! شكراً لك.';
+                responseMessage.className = 'success';
+                responseMessage.style.display = 'block';
+
+                rsvpForm.reset(); // Clear the form fields
+                // Re-initialize the form to restore pre-filled name and dynamic limits after reset
+                initForm();
+            } catch (error) {
+                console.error('Error submitting form:', error); // Log detailed error to console
+                responseMessage.textContent = 'حدث خطأ أثناء إرسال تأكيد الحضور. يرجى المحاولة مرة أخرى.';
+                responseMessage.className = 'error';
+                responseMessage.style.display = 'block';
+            } finally {
+                // Re-enable button and reset text
+                submitButton.disabled = false;
+                submitButton.textContent = 'إرسال تأكيد الحضور';
+            }
+        });
+    </script>
+</body>
+</html>
