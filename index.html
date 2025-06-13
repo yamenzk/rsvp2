@@ -743,30 +743,31 @@
 
         // Function to initialize the form based on URL parameters
         function initForm() {
-            const queryParams = getQueryParams();
-
-            const inviteeName = queryParams.name || '';
-            const initialMaxGuests = parseInt(queryParams.m || '1'); // Changed from 'max' to 'm'
-            const inviteeTitle = queryParams.title || '';
-
-            // Pre-fill invitee name and title
-            if (inviteeName) {
-                inviteeNameInput.value = inviteeName;
-            }
-            if (inviteeTitle) {
-                inviteeTitleSelect.value = inviteeTitle;
-            }
-
-            // Set the dynamic maximum total guests allowed
-            maxTotalGuestsAllowed = Math.max(1, initialMaxGuests);
-            numGuestsInput.max = maxTotalGuestsAllowed;
-
-            // Set the initial number of guests to the maximum allowed
-            numGuestsInput.value = maxTotalGuestsAllowed;
-
-            toggleAttendingDetails();
-            renderGuestFields();
+        const queryParams = getQueryParams();
+    
+        // Decode the URL-encoded values
+        const inviteeName = decodeURIComponent(queryParams.name || '');
+        const initialMaxGuests = parseInt(queryParams.m || '1');
+        const inviteeTitle = decodeURIComponent(queryParams.title || '');
+    
+        // Pre-fill invitee name and title
+        if (inviteeName) {
+            inviteeNameInput.value = inviteeName;
         }
+        if (inviteeTitle) {
+            inviteeTitleSelect.value = inviteeTitle;
+        }
+    
+        // Set the dynamic maximum total guests allowed
+        maxTotalGuestsAllowed = Math.max(1, initialMaxGuests);
+        numGuestsInput.max = maxTotalGuestsAllowed;
+    
+        // Set the initial number of guests to the maximum allowed
+        numGuestsInput.value = maxTotalGuestsAllowed;
+    
+        toggleAttendingDetails();
+        renderGuestFields();
+    }
 
         // Function to dynamically render guest input fields
         function renderGuestFields() {
