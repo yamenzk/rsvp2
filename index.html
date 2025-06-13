@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دعوة حفل زفاف فهمي و نور</title>
+    
+    <!-- Open Graph Meta Tags for Social Sharing -->
+    <meta property="og:title" content="دعوة حفل زفاف فهمي و نور">
+    <meta property="og:description" content="نتشرف بحضوركم في أسعد أيامنا - يرجى تأكيد الحضور">
+    <meta property="og:image" content="fahminoor.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="دعوة حفل زفاف فهمي و نور">
+    <meta name="twitter:description" content="نتشرف بحضوركم في أسعد أيامنا - يرجى تأكيد الحضور">
+    <meta name="twitter:image" content="fahminoor.png">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -336,19 +351,20 @@
         .submit-btn {
             width: 100%;
             height: 65px;
-            background: linear-gradient(135deg, var(--primary-warm) 0%, var(--secondary-cream) 50%, var(--warm-darker) 100%);
-            color: var(--ivory);
+            background: linear-gradient(135deg, #C9A96E 0%, #B8975A 50%, #A68B4B 100%);
+            color: #FFFFFF;
             border: none;
             border-radius: 15px;
             font-size: 1.15rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px var(--shadow-warm);
+            box-shadow: 0 8px 25px rgba(201, 169, 110, 0.3);
             margin-top: 35px;
             position: relative;
             overflow: hidden;
             letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .submit-btn::before {
@@ -358,7 +374,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
             transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -368,7 +384,8 @@
 
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 35px var(--shadow-warm);
+            box-shadow: 0 12px 35px rgba(201, 169, 110, 0.4);
+            background: linear-gradient(135deg, #D4B478 0%, #C29F64 50%, #B09455 100%);
         }
 
         .submit-btn:active {
@@ -405,6 +422,60 @@
             color: #5a2d2d;
             border: 1px solid #f5c6cb;
             box-shadow: 0 4px 15px rgba(90, 45, 45, 0.1);
+        }
+
+        /* Thank you message styling */
+        .thank-you-card {
+            background: linear-gradient(145deg, var(--ivory) 0%, var(--soft-white) 100%);
+            border-radius: 25px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 
+                0 30px 60px var(--shadow-deep),
+                0 0 0 1px var(--border-subtle),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--border-subtle);
+        }
+
+        .thank-you-title {
+            font-family: 'Amiri', serif;
+            font-size: 2.2rem;
+            color: var(--primary-warm);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .thank-you-message {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #25D366 0%, #20BA5A 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+            background: linear-gradient(135deg, #2BE46F 0%, #23C35E 100%);
+        }
+
+        .whatsapp-icon {
+            width: 24px;
+            height: 24px;
         }
 
         /* Attending Details Animation */
@@ -509,7 +580,23 @@
     <!-- No video background anymore -->
 
     <div class="container">
-        <div class="wedding-card">
+        <!-- Thank You Message (hidden by default) -->
+        <div id="thankYouCard" class="thank-you-card" style="display: none;">
+            <h1 class="thank-you-title">شكراً لكم! 🤍</h1>
+            <p class="thank-you-message">
+                تم تأكيد حضوركم بنجاح<br>
+                نتطلع بشوق لرؤيتكم في أسعد أيامنا<br><br>
+                لأي تعديل على تأكيد الحضور يرجى التواصل معنا
+            </p>
+            <a href="https://wa.me/971558818286" class="whatsapp-btn" target="_blank">
+                <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                </svg>
+                تواصل معنا واتساب
+            </a>
+        </div>
+
+        <div class="wedding-card" id="mainCard">
             <div class="header">
                 <img src="fahminoor.png" alt="صورة الزفاف" class="cover-image">
                 <div class="header-content">
@@ -591,8 +678,43 @@
         const guestsContainer = document.getElementById('guestsContainer');
         const submitButton = document.getElementById('submitButton');
         const responseMessage = document.getElementById('responseMessage');
+        const thankYouCard = document.getElementById('thankYouCard');
+        const mainCard = document.getElementById('mainCard');
 
         let maxTotalGuestsAllowed = 1;
+
+        // Cookie functions
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Check if form was already submitted
+        function checkSubmissionStatus() {
+            const queryParams = getQueryParams();
+            const inviteeName = queryParams.name || '';
+            const cookieName = `rsvp_submitted_${inviteeName.replace(/\s+/g, '_')}`;
+            
+            if (getCookie(cookieName)) {
+                // Show thank you message and hide main form
+                mainCard.style.display = 'none';
+                thankYouCard.style.display = 'block';
+                return true;
+            }
+            return false;
+        }
 
         // Function to parse URL query parameters
         function getQueryParams() {
@@ -696,7 +818,11 @@
         rsvpNo.addEventListener('change', toggleAttendingDetails);
 
         // Initialize form state on page load
-        window.addEventListener('load', initForm);
+        window.addEventListener('load', () => {
+            if (!checkSubmissionStatus()) {
+                initForm();
+            }
+        });
 
         // Form submission handler
         rsvpForm.addEventListener('submit', async (e) => {
@@ -748,17 +874,16 @@
                     body: JSON.stringify(data)
                 });
 
-                if (data.rsvpStatus === 'نعم، سأحضر') {
-                    responseMessage.innerHTML = 'تم تأكيد حضوركم بنجاح<br>نتشوق لرؤيتكم في أسعد أيامنا';
-                    responseMessage.className = 'success';
-                } else {
-                    responseMessage.innerHTML = 'شكراً لتأكيدكم<br>نأسف لعدم تمكنكم من الحضور';
-                    responseMessage.className = 'error';
-                }
-                responseMessage.style.display = 'block';
+                // Set cookie to prevent re-submission
+                const queryParams = getQueryParams();
+                const inviteeName = queryParams.name || '';
+                const cookieName = `rsvp_submitted_${inviteeName.replace(/\s+/g, '_')}`;
+                setCookie(cookieName, 'true', 30); // Cookie expires in 30 days
 
-                rsvpForm.reset();
-                initForm();
+                // Hide main form and show thank you message
+                mainCard.style.display = 'none';
+                thankYouCard.style.display = 'block';
+
             } catch (error) {
                 console.error('Error submitting form:', error);
                 responseMessage.innerHTML = 'حدث خطأ أثناء الإرسال<br>يرجى المحاولة مرة أخرى';
