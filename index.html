@@ -950,14 +950,20 @@
 
             try {
                 const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain',
-                    },
-                    body: JSON.stringify(data)
-                });
+    method: 'POST',
+    redirect: 'follow', // Important: follow redirects
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+});
 
-                const result = await response.json();
+// Check if response was redirected
+if (response.redirected) {
+    console.log('Response was redirected to:', response.url);
+}
+
+const result = await response.json();
 
                 if (result.success) {
                     // Set cookie to prevent re-submission
