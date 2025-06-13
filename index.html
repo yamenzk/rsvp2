@@ -32,14 +32,12 @@
             position: fixed; /* Fix video to viewport */
             top: 0;
             left: 0;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
+            width: 100vw; /* Explicitly set to full viewport width */
+            height: 100vh; /* Explicitly set to full viewport height */
             z-index: -1; /* Place behind other content */
-            object-fit: cover; /* Cover the entire container */
+            object-fit: cover; /* Cover the entire container, maintaining aspect ratio */
             /* Optional: Add blur or darken effect for readability */
-            filter: brightness(70%) blur(2px);
+            filter: brightness(75%) blur(1.5px); /* Slightly reduced blur and brightness */
             transition: filter 0.5s ease; /* Smooth transition for filter changes */
         }
 
@@ -107,6 +105,8 @@
             box-sizing: border-box; /* Include padding in element's total width/height */
             text-align: right; /* Input text aligned to the right */
             background-color: #fefefe; /* Slightly off-white for inputs */
+            height: 48px; /* Fixed height for consistent alignment */
+            line-height: 24px; /* Adjust line-height for vertical alignment of text within input/select */
         }
 
         /* Side-by-side fields */
@@ -114,6 +114,7 @@
             display: flex;
             flex-direction: column; /* Default to column for small screens */
             gap: 15px;
+            align-items: flex-end; /* Align items to the right for consistent baselines/bottoms */
         }
 
         .field-row .form-group {
@@ -121,9 +122,17 @@
             margin-bottom: 0; /* Remove default margin as gap handles spacing */
         }
 
+        /* Specific sizing for name and title fields on larger screens */
         @media (min-width: 600px) {
             .field-row {
-                flex-direction: row; /* Row for larger screens */
+                flex-direction: row-reverse; /* Reverse order for Arabic: Title then Name */
+                align-items: flex-end; /* Align bottoms of the inputs */
+            }
+            .field-row .name-group {
+                flex: 2; /* Make name field wider (e.g., 2/3 of space) */
+            }
+            .field-row .title-group {
+                flex: 1; /* Make title field smaller (e.g., 1/3 of space) */
             }
         }
 
@@ -209,11 +218,25 @@
             border-bottom: 1px solid #ddd; /* Separator line */
             padding-bottom: 10px;
         }
+
+        /* Custom styling for select arrow (override default) */
+        select {
+            appearance: none; /* Remove default browser arrow */
+            -webkit-appearance: none; /* For Safari */
+            -moz-appearance: none; /* For Firefox */
+            /* Custom SVG arrow, positioned to the left (visual right in RTL) */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23666' d='M8 12.5L3.5 8h9L8 12.5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 10px center; /* Position arrow to the left (right visually in RTL) */
+            padding-left: 30px; /* Add padding for the arrow */
+            padding-right: 12px; /* Maintain original padding */
+        }
     </style>
 </head>
 <body>
     <!-- Video Background -->
-    <video autoplay muted loop id="background-video">
+    <!-- Added playsinline for better mobile compatibility (iOS) -->
+    <video autoplay muted loop playsinline id="background-video">
         <!-- IMPORTANT: Ensure 'video.mp4' is in the same directory as index.html -->
         <source src="video.mp4" type="video/mp4">
         Your browser does not support the video tag.
@@ -231,12 +254,7 @@
         <form id="rsvpForm">
             <!-- Main Invitee Name and Title (side-by-side) -->
             <div class="field-row">
-                <div class="form-group">
-                    <label for="inviteeName">اسمك الكريم:</label>
-                    <input type="text" id="inviteeName" name="inviteeName" required readonly>
-                </div>
-
-                <div class="form-group">
+                <div class="form-group title-group">
                     <label for="inviteeTitle">لقبك:</label>
                     <select id="inviteeTitle" name="inviteeTitle" required>
                         <!-- 'disabled selected hidden' makes this option unselectable and serves as a placeholder -->
@@ -244,6 +262,10 @@
                         <option value="السيد">السيد</option>
                         <option value="السيدة">السيدة</option>
                     </select>
+                </div>
+                <div class="form-group name-group">
+                    <label for="inviteeName">اسمك الكريم:</label>
+                    <input type="text" id="inviteeName" name="inviteeName" required readonly>
                 </div>
             </div>
 
