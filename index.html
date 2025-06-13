@@ -702,18 +702,18 @@
         }
 
         // Check if form was already submitted
-        function checkSubmissionStatus() {
+        async function checkSubmissionStatus() {
             const queryParams = getQueryParams();
-            const inviteeName = queryParams.name || '';
-            const cookieName = `rsvp_submitted_${inviteeName.replace(/\s+/g, '_')}`;
+            const token = queryParams.token || '';
             
-            if (getCookie(cookieName)) {
-                // Show thank you message and hide main form
-                mainCard.style.display = 'none';
-                thankYouCard.style.display = 'block';
-                return true;
+            if (!token) {
+                console.error('No token provided in URL');
+                return false;
             }
-            return false;
+        
+            // For no-cors requests, we'll handle token validation in the main submission
+            // and show appropriate messages based on response
+            return false; // Always show form initially, backend will handle validation
         }
 
         // Function to parse URL query parameters
@@ -724,6 +724,21 @@
                 params[decodeURIComponent(key)] = decodeURIComponent(value || '');
             });
             return params;
+        }
+
+        async function checkTokenStatus(token) {
+            try {
+                const response = await fetch(`${WEB_APP_URL}?action=checkToken&token=${token}`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                // Since we can't read response with no-cors, we'll use a different approach
+                // We'll check token status by trying to submit a test request
+                return false; // Assume not used for now, will be handled in backend
+            } catch (error) {
+                console.error('Error checking token:', error);
+                return false;
+            }
         }
 
         // Function to initialize the form based on URL parameters
@@ -839,7 +854,9 @@
                 inviteeName: formData.get('inviteeName'),
                 inviteeTitle: formData.get('inviteeTitle'),
                 rsvpStatus: formData.get('rsvpStatus'),
-                guests: []
+                guests: [],
+                token: getQueryParams().token || '', // Add token to submission
+                action: 'submitRSVP' // Add action identifier
             };
 
             let totalAttending = 0;
