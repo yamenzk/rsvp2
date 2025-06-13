@@ -702,29 +702,33 @@
         }
 
         // Check if form was already submitted
-        async function checkSubmissionStatus() {
-            const queryParams = getQueryParams();
-            const token = queryParams.token || '';
-            
-            if (!token) {
-                console.error('No token provided in URL');
-                return false;
-            }
-        
-            // For no-cors requests, we'll handle token validation in the main submission
-            // and show appropriate messages based on response
-            return false; // Always show form initially, backend will handle validation
-        }
+       function checkSubmissionStatus() {
+    const queryParams = getQueryParams();
+    const inviteeName = queryParams.name ? decodeURIComponent(queryParams.name) : '';
+    const cookieName = `rsvp_submitted_${inviteeName.replace(/\s+/g, '_')}`;
+    
+    if (getCookie(cookieName)) {
+        // Show thank you message and hide main form
+        mainCard.style.display = 'none';
+        thankYouCard.style.display = 'block';
+        return true;
+    }
+    return false;
+}
 
         // Function to parse URL query parameters
-        function getQueryParams() {
-            const params = {};
-            window.location.search.substring(1).split('&').forEach(param => {
-                const [key, value] = param.split('=');
-                params[decodeURIComponent(key)] = decodeURIComponent(value || '');
-            });
-            return params;
+       function getQueryParams() {
+    const params = {};
+    window.location.search.substring(1).split('&').forEach(param => {
+        if (param) {
+            const [key, value] = param.split('=');
+            if (key) {
+                params[key] = value || '';
+            }
         }
+    });
+    return params;
+}
 
         async function checkTokenStatus(token) {
             try {
@@ -743,31 +747,36 @@
 
         // Function to initialize the form based on URL parameters
         function initForm() {
-        const queryParams = getQueryParams();
-    
-        // Decode the URL-encoded values
-        const inviteeName = decodeURIComponent(queryParams.name || '');
-        const initialMaxGuests = parseInt(queryParams.m || '1');
-        const inviteeTitle = decodeURIComponent(queryParams.title || '');
-    
-        // Pre-fill invitee name and title
-        if (inviteeName) {
-            inviteeNameInput.value = inviteeName;
-        }
-        if (inviteeTitle) {
-            inviteeTitleSelect.value = inviteeTitle;
-        }
-    
-        // Set the dynamic maximum total guests allowed
-        maxTotalGuestsAllowed = Math.max(1, initialMaxGuests);
-        numGuestsInput.max = maxTotalGuestsAllowed;
-    
-        // Set the initial number of guests to the maximum allowed
-        numGuestsInput.value = maxTotalGuestsAllowed;
-    
-        toggleAttendingDetails();
-        renderGuestFields();
+    const queryParams = getQueryParams();
+
+    // Decode the URL-encoded values
+    const inviteeName = queryParams.name ? decodeURIComponent(queryParams.name) : '';
+    const initialMaxGuests = parseInt(queryParams.m || '1');
+    const inviteeTitle = queryParams.title ? decodeURIComponent(queryParams.title) : '';
+
+    console.log('URL params:', queryParams); // Debug log
+    console.log('Decoded name:', inviteeName); // Debug log
+    console.log('Decoded title:', inviteeTitle); // Debug log
+
+    // Pre-fill invitee name and title
+    if (inviteeName.trim()) {
+        inviteeNameInput.value = inviteeName.trim();
     }
+    if (inviteeTitle.trim()) {
+        inviteeTitle.trim() === 'السيد' ? inviteeTitleSelect.value = 'السيد' : 
+        inviteeTitle.trim() === 'السيدة' ? inviteeTitleSelect.value = 'السيدة' : null;
+    }
+
+    // Set the dynamic maximum total guests allowed
+    maxTotalGuestsAllowed = Math.max(1, initialMaxGuests);
+    numGuestsInput.max = maxTotalGuestsAllowed;
+
+    // Set the initial number of guests to the maximum allowed
+    numGuestsInput.value = maxTotalGuestsAllowed;
+
+    toggleAttendingDetails();
+    renderGuestFields();
+}
 
         // Function to dynamically render guest input fields
         function renderGuestFields() {
@@ -856,7 +865,7 @@
                 inviteeTitle: formData.get('inviteeTitle'),
                 rsvpStatus: formData.get('rsvpStatus'),
                 guests: [],
-                token: getQueryParams().token || '', // Add token to submission
+                token: getQueryParams().token ? decodeURIComponent(getQueryParams().token) : '',
                 action: 'submitRSVP' // Add action identifier
             };
 
