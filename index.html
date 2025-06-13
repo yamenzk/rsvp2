@@ -702,10 +702,16 @@
         }
 
         // Check if form was already submitted
-       function checkSubmissionStatus() {
+      function checkSubmissionStatus() {
     const queryParams = getQueryParams();
-    const inviteeName = queryParams.name ? decodeURIComponent(queryParams.name) : '';
-    const cookieName = `rsvp_submitted_${inviteeName.replace(/\s+/g, '_')}`;
+    const token = queryParams.token || '';
+    
+    if (!token) {
+        console.error('No token provided in URL');
+        return false;
+    }
+    
+    const cookieName = `rsvp_submitted_${token}`;
     
     if (getCookie(cookieName)) {
         // Show thank you message and hide main form
@@ -714,20 +720,6 @@
         return true;
     }
     return false;
-}
-
-        // Function to parse URL query parameters
-       function getQueryParams() {
-    const params = {};
-    window.location.search.substring(1).split('&').forEach(param => {
-        if (param) {
-            const [key, value] = param.split('=');
-            if (key) {
-                params[key] = value || '';
-            }
-        }
-    });
-    return params;
 }
 
         async function checkTokenStatus(token) {
@@ -902,10 +894,10 @@
                 });
 
                 // Set cookie to prevent re-submission
-                const queryParams = getQueryParams();
-                const inviteeName = queryParams.name || '';
-                const cookieName = `rsvp_submitted_${inviteeName.replace(/\s+/g, '_')}`;
-                setCookie(cookieName, 'true', 30); // Cookie expires in 30 days
+               const queryParams = getQueryParams();
+const token = queryParams.token || '';
+const cookieName = `rsvp_submitted_${token}`;
+setCookie(cookieName, 'true', 30);
 
                 // Hide main form and show thank you message
                 mainCard.style.display = 'none';
