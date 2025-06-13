@@ -491,6 +491,25 @@
             max-height: 2000px;
         }
 
+        /* Loading spinner for checking token */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-subtle);
+            border-top: 4px solid var(--primary-warm);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
         /* Mobile Optimizations */
         @media (max-width: 600px) {
             .container {
@@ -578,6 +597,14 @@
 </head>
 <body>
     <div class="container">
+        <!-- Loading State -->
+        <div id="loadingState" class="wedding-card">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>جاري التحقق من الدعوة...</p>
+            </div>
+        </div>
+
         <!-- Thank You Message (hidden by default) -->
         <div id="thankYouCard" class="thank-you-card" style="display: none;">
             <h1 class="thank-you-title">شكراً لكم! 🤍</h1>
@@ -594,7 +621,7 @@
             </a>
         </div>
 
-        <div class="wedding-card" id="mainCard">
+        <div class="wedding-card" id="mainCard" style="display: none;">
             <div class="header">
                 <img src="fahminoor.png" alt="صورة الزفاف" class="cover-image">
                 <div class="header-content">
@@ -678,6 +705,7 @@
         const responseMessage = document.getElementById('responseMessage');
         const thankYouCard = document.getElementById('thankYouCard');
         const mainCard = document.getElementById('mainCard');
+        const loadingState = document.getElementById('loadingState');
 
         let maxTotalGuestsAllowed = 1;
 
@@ -709,40 +737,72 @@
             return params;
         }
 
-        // Check if form was already submitted
-        function checkSubmissionStatus() {
-            const queryParams = getQueryParams();
-            const token = queryParams.token || '';
-            
+        // Check token status from backend (authoritative source)
+        async function checkTokenStatusFromBackend(token) {
             if (!token) {
-                console.error('No token provided in URL');
-                return false;
+                return { used: false, error: 'No token provided' };
             }
-            
-            const cookieName = `rsvp_submitted_${token}`;
-            
-            if (getCookie(cookieName)) {
-                // Show thank you message and hide main form
-                mainCard.style.display = 'none';
-                thankYouCard.style.display = 'block';
-                return true;
-            }
-            return false;
-        }
 
-        async function checkTokenStatus(token) {
             try {
-                const response = await fetch(`${WEB_APP_URL}?action=checkToken&token=${token}`, {
-                    method: 'GET',
-                    mode: 'no-cors'
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: JSON.stringify({
+                        action: 'checkToken',
+                        token: token
+                    })
                 });
-                // Since we can't read response with no-cors, we'll use a different approach
-                // We'll check token status by trying to submit a test request
-                return false; // Assume not used for now, will be handled in backend
+
+                const result = await response.json();
+                return result;
             } catch (error) {
                 console.error('Error checking token:', error);
-                return false;
+                return { used: false, error: 'Connection error' };
             }
+        }
+
+        // Initialize the page
+        async function initializePage() {
+            const queryParams = getQueryParams();
+            const token = queryParams.token ? decodeURIComponent(queryParams.token) : '';
+
+            if (!token) {
+                showError('رابط غير صحيح - لا يوجد رمز دعوة');
+                return;
+            }
+
+            // Check token status from backend first
+            const tokenStatus = await checkTokenStatusFromBackend(token);
+
+            if (tokenStatus.used) {
+                // Token already used - show thank you message
+                loadingState.style.display = 'none';
+                thankYouCard.style.display = 'block';
+                // Also set cookie for faster future checks
+                const cookieName = `rsvp_submitted_${token}`;
+                setCookie(cookieName, 'true', 30);
+            } else if (tokenStatus.error && tokenStatus.error !== 'Connection error') {
+                // Invalid token
+                showError('رمز الدعوة غير صحيح أو منتهي الصلاحية');
+            } else {
+                // Token is valid and not used - show form
+                loadingState.style.display = 'none';
+                mainCard.style.display = 'block';
+                initForm();
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            loadingState.innerHTML = `
+                <div class="form-section">
+                    <div class="error" style="display: block; margin: 0;">
+                        ${message}
+                    </div>
+                </div>
+            `;
         }
 
         // Function to initialize the form based on URL parameters
@@ -845,12 +905,8 @@
         rsvpYes.addEventListener('change', toggleAttendingDetails);
         rsvpNo.addEventListener('change', toggleAttendingDetails);
 
-        // Initialize form state on page load
-        window.addEventListener('load', () => {
-            if (!checkSubmissionStatus()) {
-                initForm();
-            }
-        });
+        // Initialize page on load
+        window.addEventListener('load', initializePage);
 
         // Form submission handler
         rsvpForm.addEventListener('submit', async (e) => {
@@ -869,7 +925,7 @@
                 rsvpStatus: formData.get('rsvpStatus'),
                 guests: [],
                 token: getQueryParams().token ? decodeURIComponent(getQueryParams().token) : '',
-                action: 'submitRSVP' // Add action identifier
+                action: 'submitRSVP'
             };
 
             let totalAttending = 0;
@@ -896,7 +952,7 @@
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'text/plain', // Changed to avoid preflight
+                        'Content-Type': 'text/plain',
                     },
                     body: JSON.stringify(data)
                 });
